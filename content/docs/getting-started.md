@@ -96,7 +96,7 @@ Nếu bạn muốn học chắc lý thuyết **step by step** với [hướng d�
 
 Đọc [tư duy trong React](/docs/thinking-in-react.html) để nắm được tư duy khi xây dựng chương trình với React.
 
-### Recommended Courses {#recommended-courses}
+### Các khoá nên học {#recommended-courses}
 
 Sometimes people find third-party books and video courses more helpful than the official documentation. We maintain [a list of commonly recommended resources](/community/courses.html), some of which are free.
 

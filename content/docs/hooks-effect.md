@@ -6,9 +6,9 @@ next: hooks-rules.html
 prev: hooks-state.html
 ---
 
-*Hooks* are a new addition in React 16.8. They let you use state and other React features without writing a class.
+*Hooks* là một tính năng mới được thêm vào từ phiên bản 16.8. Cho phép sử dụng state và các tính năng React mà không cần viết class
 
-The *Effect Hook* lets you perform side effects in function components:
+*Effect Hook* cho phép bạn xử lý các side effects trong function components:
 
 ```js{1,6-10}
 import React, { useState, useEffect } from 'react';
@@ -33,15 +33,16 @@ function Example() {
 }
 ```
 
-This snippet is based on the [counter example from the previous page](/docs/hooks-state.html), but we added a new feature to it: we set the document title to a custom message including the number of clicks.
+Đoạn mã trên được lấy từ [ví dụ của phần trước](/docs/hooks-state.html), nhưng đã được thêm tính năng: chúng tôi đặt lại tiêu đề trang một tin nhắn khi click vào button.
 
-Data fetching, setting up a subscription, and manually changing the DOM in React components are all examples of side effects. Whether or not you're used to calling these operations "side effects" (or just "effects"), you've likely performed them in your components before.
+Lấy dữ liệu và hiển thị, thiết lập đăng ký, và thay đổi DOM trong React components là tất cả các ví dụ về thực thi "side effects" (hoặc đơn giản là "effects"), cho dù bạn có hay không sử dụng để gọi các hoạt động này trong component hay không.
 
->Tip
+>Mẹo nhỏ
 >
->If you're familiar with React class lifecycle methods, you can think of `useEffect` Hook as `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount` combined.
+>Nếu bạn quen thuộc với React class lifecycle methods, bạn có thể nghĩ đến `useEffect` Hook kết hơp `componentDidMount`, `componentDidUpdate` và `componentWillUnmount`.
 
 There are two common kinds of side effects in React components: those that don't require cleanup, and those that do. Let's look at this distinction in more detail.
+Có hai loại side effect phổ biến trong React components: Những loại không có yêu cầu dọn dẹp, và những loại
 
 ## Effects Without Cleanup {#effects-without-cleanup}
 

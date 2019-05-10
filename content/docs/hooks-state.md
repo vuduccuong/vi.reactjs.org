@@ -276,5 +276,5 @@ Bạn không cần sử dụng nhiều biến state. Các biến state có thể
 Chúng ta đã tìm hiểu một chút về những gì Hook làm. Hook là các functions cho phép bạn "hook into" vào các tính năng của React
 từ các function components. Chúng ta luôn đặt tên bắt đầu bằng `use` và có nhiều Hooks mà chúng ta chưa biết
 
-**Tiếp tục [tìm hiểu Hook tiếp thep: `useEffect`.](/docs/hooks-effect.html)** It lets you perform side effects in components, and is similar to lifecycle methods in classes.
+**Tiếp tục [tìm hiểu Hook tiếp theo: `useEffect`.](/docs/hooks-effect.html)** It lets you perform side effects in components, and is similar to lifecycle methods in classes.
 ** Cho phép bạn thực hiện side effects trong components, và tương tự lifecycle methods trong class.
