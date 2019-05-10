@@ -16,6 +16,12 @@ This repo contains the source code and documentation powering [reactjs.org](http
 
 1. `cd reactjs.org` to go into the project root
 1. `yarn` to install the website's npm dependencies
+Chạy lệnh `npm install -g gatsby-cli`
+Tiếp theo `npm install`
+Tiếp theo `yarn`
+-Nếu báo lỗi *graphql* thì chạy lệnh `yarn add graphql` sau đó chạy `yarn` để cập nhật lại 
+Chạy `yarn dev`
+-Nếu lỗi nữa thì vào file `package.json` bỏ dòng "graphql":"^14...." trong "dependencies" rồi chạy lệnh `yarn` sau khi hoàn thành thì chạy `yarn dev`. 
 
 ### Running locally
 
