@@ -307,10 +307,9 @@ class FriendStatusWithCounter extends React.Component {
   // ...
 ```
 
-Note how the logic that sets `document.title` is split between `componentDidMount` and `componentDidUpdate`. The subscription logic is also spread between `componentDidMount` and `componentWillUnmount`. And `componentDidMount` contains code for both tasks.
-Lưu ý, thời điểm để gán `document.title` là khoảng thời gian `componentDidMount` và `componentDidUpdate`. logic đăng ký cũng được nằm trong khoảng thời gian
+Lưu ý, thời điểm để gán `document.title` là khoảng thời gian nằm giữa `componentDidMount` và `componentDidUpdate`. logic đăng ký cũng được nằm trong khoảng thời gian giữa `componentDidMount` và `componentWillUnmount`. Và `componentDidMount` sảy ra ở cả 2 nhiệm vụ.
 
-So, how can Hooks solve this problem? Just like [you can use the *State* Hook more than once](/docs/hooks-state.html#tip-using-multiple-state-variables), you can also use several effects. This lets us separate unrelated logic into different effects:
+Vậy, bằng cách nào mà Hooks có thể giải quyết vấn đề này? Giống như việc [bạn sử dụng State Hook nhiều lần](/docs/hooks-state.html#tip-using-multiple-state-variables), bạn cũng có thể sử dụng một số effect. Điều này cho phép chúng ta tách những thứ không liên quan đến nhau, thành những effect khác nhau:
 
 ```js{3,8}
 function FriendStatusWithCounter(props) {
@@ -334,13 +333,13 @@ function FriendStatusWithCounter(props) {
 }
 ```
 
-**Hooks lets us split the code based on what it is doing** rather than a lifecycle method name. React will apply *every* effect used by the component, in the order they were specified.
+**Hooks cho phép chúng ta tách code theo chức năng của nó** thay vì đặt theo tên lifecycle method. React sẽ áp dụng mọi effect được sử dụng bởi component theo một thứ tự được định sẵn
 
-### Explanation: Why Effects Run on Each Update {#explanation-why-effects-run-on-each-update}
+### Giải thích: Tại sao Effect chạy sau mỗi lần cập nhật {#explanation-why-effects-run-on-each-update}
 
-If you're used to classes, you might be wondering why the effect cleanup phase happens after every re-render, and not just once during unmounting. Let's look at a practical example to see why this design helps us create components with fewer bugs.
+Nếu bạn sử dụng class, bạn có thể tự hỏi tại sao giai đoạn dọn dẹp effect lại sảy ra sau mỗi lần render lại, và không chi một lần trong khi unmounting. Hãy cùng xem một ví dụ thực tế để xem tại sao thiết kế này giúp chúng ta tạo ra các component ít lỗi hơn.
 
-[Earlier on this page](#example-using-classes-1), we introduced an example `FriendStatus` component that displays whether a friend is online or not. Our class reads `friend.id` from `this.props`, subscribes to the friend status after the component mounts, and unsubscribes during unmounting:
+[Trước đó, ở trang này](#example-using-classes-1), chúng ta đã được biết về ví dụ `FriendStatus component` để hiển thị danh sách bạn bè có online hay không. Class của chúng ta đọc `friend.id` từ `this.props`, đăng ký trạng thái online của bạn bè sau khi component mounts, và huỷ đăng ký trong khi unmounting:
 
 ```js
   componentDidMount() {
@@ -358,9 +357,9 @@ If you're used to classes, you might be wondering why the effect cleanup phase h
   }
 ```
 
-**But what happens if the `friend` prop changes** while the component is on the screen? Our component would continue displaying the online status of a different friend. This is a bug. We would also cause a memory leak or crash when unmounting since the unsubscribe call would use the wrong friend ID.
+**Nhưng điều gì sảy ra nếu `friend` props thay đổi** trong khi component còn trên màn hình? Component của chúng ta sẽ tiếp tục hiển thị trạng thái trực tuyến của một người bạn khác. Đây là một bug. Chúng ta sẽ gây ra tràn bộ nhớ hoặc gặp lỗi khi unmounting vì huỷ đăng ký sẽ sử dụng sai friend ID.
 
-In a class component, we would need to add `componentDidUpdate` to handle this case:
+Trong class component, chúng ta sẽ cần thêm `componentDidUpdate` để xử lý trường hợp này:
 
 ```js{8-19}
   componentDidMount() {
@@ -391,9 +390,9 @@ In a class component, we would need to add `componentDidUpdate` to handle this c
   }
 ```
 
-Forgetting to handle `componentDidUpdate` properly is a common source of bugs in React applications.
+Quên sử lý `componentDidUpdate` đúng cách sẽ phát sinh lỗi trong các ứng dụng React.
 
-Now consider the version of this component that uses Hooks:
+Nào, bây giờ hãy xem phiên bản component sử dụng Hooks:
 
 ```js
 function FriendStatus(props) {
@@ -407,9 +406,9 @@ function FriendStatus(props) {
   });
 ```
 
-It doesn't suffer from this bug. (But we also didn't make any changes to it.)
+Nó không phải chịu lỗi.(Nhưng chúng tôi đã không thực hiện bất kì thay đổi nào với nó.)
 
-There is no special code for handling updates because `useEffect` handles them *by default*. It cleans up the previous effects before applying the next effects. To illustrate this, here is a sequence of subscribe and unsubscribe calls that this component could produce over time:
+Không có code đặc biệt để xử lý các lần cập nhật, bởi vì `useEffect` xử lý chúng *theo mặc định*. Nó dọn dẹp các effect trước khi áp dụng các effect tiếp theo. Để minh hoạ cho điều này, đây là một chuỗi các lần đăng ký và huỷ đăng ký mà component này có thể tạo ra theo thời gian:
 
 ```js
 // Mount with { friend: { id: 100 } } props
@@ -428,10 +427,11 @@ ChatAPI.unsubscribeFromFriendStatus(300, handleStatusChange); // Clean up last e
 ```
 
 This behavior ensures consistency by default and prevents bugs that are common in class components due to missing update logic.
+Hành vi này đảm bảo tính nhất quán theo mặc định và ngăn ngừa các lỗi phổ biến trong các class component do thiếu logic cập nhật.
 
-### Tip: Optimizing Performance by Skipping Effects {#tip-optimizing-performance-by-skipping-effects}
+### Mẹo: Tối ưu hoá hiệu suất bằng cách bỏ qua Effects {#tip-optimizing-performance-by-skipping-effects}
 
-In some cases, cleaning up or applying the effect after every render might create a performance problem. In class components, we can solve this by writing an extra comparison with `prevProps` or `prevState` inside `componentDidUpdate`:
+Trong một số trường hợp, việc dọn dẹp hoặc áp dụng effect sau mỗi lần render có thể tạo ra các vấn đề về hiệu năng. Trong các class component, chúng ta có thể giải quyết việc này bằng cách viết bổ sung `prevProps` hoặc `prevState` bên trong `componentDidUpdate`:
 
 ```js
 componentDidUpdate(prevProps, prevState) {
@@ -441,7 +441,7 @@ componentDidUpdate(prevProps, prevState) {
 }
 ```
 
-This requirement is common enough that it is built into the `useEffect` Hook API. You can tell React to *skip* applying an effect if certain values haven't changed between re-renders. To do so, pass an array as an optional second argument to `useEffect`:
+Yêu cầu này đủ phổ biến để được tích hợp vào `useEffect` Hook API. Bạn có thể yêu cầu React bỏ qua việc áp dụng effect nếu một số giá trị nhất định đã thay đổi giữa những lần render lại. Để làm như vậy, truyền vào một mảng dưới dạng đối số là lựa chọn thứ hai cho `useEffect`:
 
 ```js{3}
 useEffect(() => {
@@ -449,11 +449,11 @@ useEffect(() => {
 }, [count]); // Only re-run the effect if count changes
 ```
 
-In the example above, we pass `[count]` as the second argument. What does this mean? If the `count` is `5`, and then our component re-renders with `count` still equal to `5`, React will compare `[5]` from the previous render and `[5]` from the next render. Because all items in the array are the same (`5 === 5`), React would skip the effect. That's our optimization.
+Trong ví dụ trên, chúng ta đặt `[count]` làm đối số thứ hai. Điều đó có nghĩa là gì? Nếu `count` là `5`, và sau đó, component sẽ render lại với `count` vẫn bằng `5`, React sẽ so sánh `[5]` từ lần render trước đó và `[5]` từ lần render tiếp theo. Bởi vì tất các các item trong mảng đều giống nhau(`5 === 5`), React sẽ bỏ qua effect đó. Đó là tối ưu hoá `useEffect`.
 
-When we render with `count` updated to `6`, React will compare the items in the `[5]` array from the previous render to items in the `[6]` array from the next render. This time, React will re-apply the effect because `5 !== 6`. If there are multiple items in the array, React will re-run the effect even if just one of them is different.
+Khi chúng ta render với `count` đã được cập nhật là `6`, React sẽ so sánh các item trong mảng (`[5]`) từ lần render trước đó với các item trong mảng (`[6]`) từ lần render tiếp theo. Lần này, React sẽ áp dụng  lại effect bởi vì `5 !== 6`. Nếu có nhiều item trong mảng, React sẽ chạy lại effect ngay cả khi chỉ một số chúng là khác nhau.
 
-This also works for effects that have a cleanup phase:
+Điều này cũng hoạt động cho các effect yêu cầu dọn dẹp:
 
 ```js{10}
 useEffect(() => {
@@ -468,22 +468,22 @@ useEffect(() => {
 }, [props.friend.id]); // Only re-subscribe if props.friend.id changes
 ```
 
-In the future, the second argument might get added automatically by a build-time transformation.
+Trong tương lai, đối số thứ hai có thể được thêm tự động bằng cách chuyển đổi build-time.
 
->Note
+>Chú thích
 >
->If you use this optimization, make sure the array includes **all values from the component scope (such as props and state) that change over time and that are used by the effect**. Otherwise, your code will reference stale values from previous renders. Learn more about [how to deal with functions](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) and [what to do when the array changes too often](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often).
+>Nếu bạn sử dụng tối ưu hoá này, hãy đảm bảo mảng gồm **tất cả các giá trị từ component scope (chẳng hạn như props và state) thay đổi theo thời gian và được sử dụng vởi effect**. Nếu không code của bạn sẽ tham chiếu các giá trị cũ từ các lần render trước đó. Tìm hiểu thêm về [cách xử lý các function](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) và [phải làm gì khi mảng thay đổi quá thường xuyên](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often).
 >
->If you want to run an effect and clean it up only once (on mount and unmount), you can pass an empty array (`[]`) as a second argument. This tells React that your effect doesn't depend on *any* values from props or state, so it never needs to re-run. This isn't handled as a special case -- it follows directly from how the inputs array always works.
+>Nếu bạn muốn chạy một effect và dọn dẹp nó chỉ một lần (trên mount và unmount), bạn có thể chuyển một mảng rỗng (`[]`) làm đối số thứ hai. Điều này cho React biết rằng, effect của bạn không phụ thuộc vào bất kỳ giá trị nào từ props hoặc state, do đó mà không bao giờ cần phải chạy lại. Điều này được xử lý như một trường hợp đặc biệt - nó diễn ra trực tiếp từ cách mảng đầu vào luôn hoạt động.
 >
->If you pass an empty array (`[]`), the props and state inside the effect will always have their initial values. While passing `[]` as the second argument is closer to the familiar `componentDidMount` and `componentWillUnmount` mental model, there are usually [better](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) [solutions](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often) to avoid re-running effects too often. Also, don't forget that React defers running `useEffect` until after the browser has painted, so doing extra work is less of a problem.
+>Nếu bạn muốn sử dụng một mảng rỗng (`[]`), props và state trong effect sẽ luôn có các giá trị ban đầu của chúng. Trong khi chuyển `[]` làm đối số thứ hai gần hơn với mô hình quen thuộc `componentDidMount` và `componentWillUnmount` thường có các [giải pháp ](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often) [tốt hơn](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) để tránh các effect chạy lại quá thường xuyên. Ngoài ra, đừng quên rằng React trì hoãn việc sử dụng `useEffect` cho đến khi trình duyệt đã vẽ xong, việc làm thêm sẽ gặp ít vấn đề hơn.
 >
->We recommend using the [`exhaustive-deps`](https://github.com/facebook/react/issues/14920) rule as part of our [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation) package. It warns when dependencies are specified incorrectly and suggests a fix.
+>Chúng tôi khuyên bạn nên sử dụng quy tắc [`exhaustive-deps`](https://github.com/facebook/react/issues/14920) như một phần package[`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation). Nó cảnh báo khi các phụ thuộc được chỉ định không chính xác và đề nghị sửa chữa.
 
-## Next Steps {#next-steps}
+## Bước tiếp theo {#next-steps}
 
-Congratulations! This was a long page, but hopefully by the end most of your questions about effects were answered. You've learned both the State Hook and the Effect Hook, and there is a *lot* you can do with both of them combined. They cover most of the use cases for classes -- and where they don't, you might find the [additional Hooks](/docs/hooks-reference.html) helpful.
+Xin chúc mừng, đây là một trang khá dài, nhưng hy vọng các câu hỏi của bạn về Effect Hook đã được trả lời. Bạn đã học được cả State Hook và Effect Hook, và có thể làm được rất nhiều thứ với cả hai. Chúng bao gồm hầu hết các trường hợp sử dụng class -- mà ở đó chúng ta không thể làm, bạn có thể tìm [thêm các Hooks hữu ích khác](/docs/hooks-reference.html).
 
-We're also starting to see how Hooks solve problems outlined in [Motivation](/docs/hooks-intro.html#motivation). We've seen how effect cleanup avoids duplication in `componentDidUpdate` and `componentWillUnmount`, brings related code closer together, and helps us avoid bugs. We've also seen how we can separate effects by their purpose, which is something we couldn't do in classes at all.
+Chúng ta cũng bắt đầu thấy cách Hook giải quyết các vấn đề được nêu trong [Motivation](/docs/hooks-intro.html#motivation). Chúng ta có thể thấy cách dọn dẹp effect tránh sự trùng lặp trong `componentDidUpdate` và `componentWillUnmount`, khiến code gọn gàng hơn và giúp tránh lỗi. Chúng ta đã thấy cách mà chúng tôi có thể phân tách các effect theo mục đích của chúng, đó là điều mà không thể làm được với khi sử dụng class.
 
-At this point you might be questioning how Hooks work. How can React know which `useState` call corresponds to which state variable between re-renders? How does React "match up" previous and next effects on every update? **On the next page we will learn about the [Rules of Hooks](/docs/hooks-rules.html) -- they're essential to making Hooks work.**
+Tại thời điểm này, bạn có thể đặt câu hỏi về cách thức hoạt động của Hook. Làm thế nào React có thể gọi chính xác `useState` nào tương ứng với biến state giữa mỗi lần render lại? Làm thế nào để React lựa chọn effect trước và sau khi update? **Trong trang tiếp theo, chúng ta sẽ học về [Quy tắc trong Hook](/docs/hooks-rules.html) -- Nó rất cần thiết để Hook có thể hoạt động.**
