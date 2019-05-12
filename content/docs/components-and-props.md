@@ -1,6 +1,6 @@
 ---
-id: components-and-props
-title: Components and Props
+id: components-và-props
+title: Components và Props
 permalink: docs/components-and-props.html
 redirect_from:
   - "docs/reusable-components.html"
@@ -16,13 +16,13 @@ prev: rendering-elements.html
 next: state-and-lifecycle.html
 ---
 
-Components let you split the UI into independent, reusable pieces, and think about each piece in isolation. This page provides an introduction to the idea of components. You can find a [detailed component API reference here](/docs/react-component.html).
+Các component cho phép chia nhỏ UI thành các phần độc lập, có thể tái sử dụng và tư duy từng phần riêng lẻ. Trang này giới thiệu về ý tưởng của component. Bạn có thể tìm [tài liệu tham khảo component API tại đây](/docs/react-component.html).
 
-Conceptually, components are like JavaScript functions. They accept arbitrary inputs (called "props") and return React elements describing what should appear on the screen.
+Về khái niệm, component như các function trong Javascript. Nó chấp nhận các đầu vào tuỳ ý (gọi là props) và trả về các phần tử React mô tả những gì hiển thị ra màn hình.
 
-## Function and Class Components {#function-and-class-components}
+## Function và Class Components {#function-and-class-components}
 
-The simplest way to define a component is to write a JavaScript function:
+Cách đơn giản nhất để định nghĩa một component là viết Javascript function:
 
 ```js
 function Welcome(props) {
@@ -30,9 +30,9 @@ function Welcome(props) {
 }
 ```
 
-This function is a valid React component because it accepts a single "props" (which stands for properties) object argument with data and returns a React element. We call such components "function components" because they are literally JavaScript functions.
+Function này hợp lệ với React component bởi vì nó chấp nhận một "props" với dữ liệu được trả về một phần tử React. Chúng tôi gọi các component như vậy là "function components", vì chúng là các Javascript function theo đúng nghĩa đen.
 
-You can also use an [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) to define a component:
+Bạn cũng có thể dùng [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) để định nghĩa các component:
 
 ```js
 class Welcome extends React.Component {
@@ -42,27 +42,28 @@ class Welcome extends React.Component {
 }
 ```
 
-The above two components are equivalent from React's point of view.
+Hai component trên tương đương với quan điểm trong React : "React's point of view"
 
-Classes have some additional features that we will discuss in the [next sections](/docs/state-and-lifecycle.html). Until then, we will use function components for their conciseness.
+Các class có một số tình năng bổ sung mà chúng ta sẽ thảo luận trong  [phần tiếp theo](/docs/state-and-lifecycle.html). Cho đến lúc đó, chúng ta sẽ sử dụng các function component cho thống nhất.
 
-## Rendering a Component {#rendering-a-component}
+## Render một Component {#rendering-a-component}
 
-Previously, we only encountered React elements that represent DOM tags:
+Trước đây, chúng ta chỉ gặp các phần tử React đại diện cho DOM
 
 ```js
 const element = <div />;
 ```
 
-However, elements can also represent user-defined components:
+Tuy nhiên, các phần tử này cũng có thể đại diện cho các component do người dùng tự định nghĩa:
 
 ```js
 const element = <Welcome name="Sara" />;
 ```
 
-When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object. We call this object "props".
+Khi React thấy một phần tử đại diện cho một component do người dùng định nghĩa, nó chuyển các thuộc tính JSX cho component này dưới dạng một single object. Chúng ta gọi đối tượng này là "props".
 
-For example, this code renders "Hello, Sara" on the page:
+For example, this code renders "Hello, Sara":
+Ví dụ: code dưới đây in ra màn hình chữ "Hello, Sara"
 
 ```js{1,5}
 function Welcome(props) {
@@ -78,18 +79,19 @@ ReactDOM.render(
 
 [](codepen://components-and-props/rendering-a-component)
 
-Let's recap what happens in this example:
+Hãy xe điều gì sảy ra ở những dòng code trên:
 
-1. We call `ReactDOM.render()` with the `<Welcome name="Sara" />` element.
-2. React calls the `Welcome` component with `{name: 'Sara'}` as the props.
-3. Our `Welcome` component returns a `<h1>Hello, Sara</h1>` element as the result.
-4. React DOM efficiently updates the DOM to match `<h1>Hello, Sara</h1>`.
+1. Chúng ta gọi `ReactDOM.render()` bằng phần tử `<Welcome name = "Sara" />`.
+2. React gọi component `Welcome` với `{name: 'Sara'}` là props.
+3. Component `Welcome` trả về kết quả là một thẻ `<h1>Hello, Sara</h1>`.
+4. React DOM tính toán, cập nhật lại để kết quả DOM khớp với`<h1>Hello, Sara</h1>`.
 
->**Note:** Always start component names with a capital letter.
+>**Chú ý:** Luôn bắt đầu tên của component bằng chữ in hoa.
 >
->React treats components starting with lowercase letters as DOM tags. For example, `<div />` represents an HTML div tag, but `<Welcome />` represents a component and requires `Welcome` to be in scope.
+>React xử lý các component bắt đầu bằng chữ thường dưới dạng thẻ DOM. Ví dụ: `<div />` thẻ div trong HTML, nhưng `Welcome` đại diện cho component và yêu cầu `Welcome` trong phạm vi scope.
 >
->To learn more about the reasoning behind this convention, please read [JSX In Depth](/docs/jsx-in-depth.html#user-defined-components-must-be-capitalized).
+>To learn more about the reasoning behind this convention, please read
+>Để tìm hiểu về lý do sử dụng quy ước này, vui lòng đọc [JSX In Depth](/docs/jsx-in-depth.html#user-defined-components-must-be-capitalized).
 
 ## Composing Components {#composing-components}
 
