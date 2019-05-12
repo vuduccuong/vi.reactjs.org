@@ -6,11 +6,11 @@ next: hooks-reference.html
 prev: hooks-rules.html
 ---
 
-*Hooks* are a new addition in React 16.8. They let you use state and other React features without writing a class.
+*Hooks* là một tính năng mới được thêm vào từ phiên bản 16.8. Cho phép sử dụng state và các tính năng React mà không cần viết class
 
-Building your own Hooks lets you extract component logic into reusable functions.
+Xây dựng Hook riêng của bạn, cho phép bạn trích xuất các component có thể tái sử dụng.
 
-When we were learning about [using the Effect Hook](/docs/hooks-effect.html#example-using-hooks-1), we saw this component from a chat application that displays a message indicating whether a friend is online or offline:
+Khi chúng ta tìm hiểu cách [sử dụng Effect Hook](/docs/hooks-effect.html#example-using-hooks-1), chúng ta đã thấy component này từ một ứng dụng chat hiển thị danh sách bạn bè onlie hay offline:
 
 ```js{4-15}
 import React, { useState, useEffect } from 'react';
@@ -36,7 +36,7 @@ function FriendStatus(props) {
 }
 ```
 
-Now let's say that our chat application also has a contact list, and we want to render names of online users with a green color. We could copy and paste similar logic above into our `FriendListItem` component but it wouldn't be ideal:
+Bây giờ, có thể nói rằng ứng dụng chat của chúng ta đã có một danh sách liên lạc và chúng ta muốn hiển thị tên người dùng trực tuyến với màu xanh lục. Chúng ta có thể sao chép và dán code ở trên vào component `FriendListItem` nhưng nó không phải là một ý tưởng tốt:
 
 ```js{4-15}
 import React, { useState, useEffect } from 'react';
@@ -63,15 +63,15 @@ function FriendListItem(props) {
 }
 ```
 
-Instead, we'd like to share this logic between `FriendStatus` and `FriendListItem`.
+Thay vào đó, chúng tôi muốn sử dụng logic này qua lại giữa `FriendStatus` và `FriendListItem`.
 
-Traditionally in React, we've had two popular ways to share stateful logic between components: [render props](/docs/render-props.html) and [higher-order components](/docs/higher-order-components.html). We will now look at how Hooks solve many of the same problems without forcing you to add more components to the tree.
+Trong React, chúng ta có hai cách phổ biến để chia sẻ logic stateful giữa các component: [render props](/docs/render-props.html) và [higher-order components](/docs/higher-order-components.html). Chúng ta sẽ xem xét cách mà Hooks giải quyết nhiều vấn đề tương tự mà không buộc bạn phải thêm nhiều component vào dự án.
 
-## Extracting a Custom Hook {#extracting-a-custom-hook}
+## Trích xuất một Hook tuỳ chỉnh{#extracting-a-custom-hook}
 
-When we want to share logic between two JavaScript functions, we extract it to a third function. Both components and Hooks are functions, so this works for them too!
+Khi chúng ta muốn chia sẻ logic giữa hai Function trong Javascript, chúng ta trích xuất nó sang một function thứ ba, cả component và Hook đều là function, vì vậy điều này cũng hoạt động với chúng.
 
-**A custom Hook is a JavaScript function whose name starts with "`use`" and that may call other Hooks.** For example, `useFriendStatus` below is our first custom Hook:
+**Một Hook tuỳ chình là một function Javascript có tên bắt đầu bằng "`use`" và có thể gọi các Hook khác.** Ví dụ: `useFriendStatus` bên dưới là một Hook tuỳ chỉnh của chúng ta:
 
 ```js{3}
 import React, { useState, useEffect } from 'react';
@@ -94,11 +94,11 @@ function useFriendStatus(friendID) {
 }
 ```
 
-There's nothing new inside of it -- the logic is copied from the components above. Just like in a component, make sure to only call other Hooks unconditionally at the top level of your custom Hook.
+Không có gì mới bên trong nó - logic được coppy từ các component trên. Giống như trong một component, đảm bảo chỉ gọi các Hook khác vô điều kiện ở top level của Hook tuỳ chỉnh.
 
-Unlike a React component, a custom Hook doesn't need to have a specific signature. We can decide what it takes as arguments, and what, if anything, it should return. In other words, it's just like a normal function. Its name should always start with `use` so that you can tell at a glance that the [rules of Hooks](/docs/hooks-rules.html) apply to it.
+Không giống như một React component, một Hook tuỳ chỉnh không cần phải có một ký hiệu cụ thể. Chúng ta có thể quyết định những gì nó cần là takes as arguments, and what, if anything, it should return. Nói cách khác, nó giống như môt function bình thường. Tên của nó luôn phải bắt đầu bằng `use` để bạn có thể biết trong nháy mắt rằng [các quy tắc của Hook](/docs/hooks-rules.html) áp dụng cho nó.
 
-The purpose of our `useFriendStatus` Hook is to subscribe us to a friend's status. This is why it takes `friendID` as an argument, and returns whether this friend is online:
+Mục đích của `useFriendStatus` Hook là khai báo status của danh sách bạn bè. Đây là lý do tại sao nó lấy `friendID` làm đối số và return trạng thái người bạn này có online hay không:
 
 ```js
 function useFriendStatus(friendID) {
@@ -110,13 +110,13 @@ function useFriendStatus(friendID) {
 }
 ```
 
-Now let's see how we can use our custom Hook.
+Bây giờ, hãy cho chúng tôi xem cách bạn tuỳ chỉnh Hook của mình nào.
 
-## Using a Custom Hook {#using-a-custom-hook}
+## Cách sử dụng một Hook tuỳ chỉnh {#using-a-custom-hook}
 
-In the beginning, our stated goal was to remove the duplicated logic from the `FriendStatus` and `FriendListItem` components. Both of them want to know whether a friend is online.
+Ban đầu, mục tiêu đã nêu của chúng tôi là loại bỏ logic trùng lặp trong `FriendStatus` và `FriendListItem` component. Cả hai đều muốn biết liệu một người bạn có online hay không.
 
-Now that we've extracted this logic to a `useFriendStatus` hook, we can *just use it:*
+Bây giờ chúng ta đã trích xuất logic này vào `useFriendStatus` Hook, chúng ta có thể *sử dụng nó:*
 
 ```js{2}
 function FriendStatus(props) {
@@ -141,19 +141,18 @@ function FriendListItem(props) {
 }
 ```
 
-**Is this code equivalent to the original examples?** Yes, it works in exactly the same way. If you look closely, you'll notice we didn't make any changes to the behavior. All we did was to extract some common code between two functions into a separate function. **Custom Hooks are a convention that naturally follows from the design of Hooks, rather than a React feature.**
+**Code này có  tương đương với những ví dụ ban đầu không?** Có, nó hoạt động giống như nhau. Nếu bạn nhìn kỹ, bạn sẽ nhận thấy chúng ta đã thực hiện bất kỳ thay đổi nào đối với hành vi. Tất cả những gì chúng ta làm là trích xuất một số code dùng chung giữa hai function thành một function riêng biệt. **Hook tuỳ chỉnh là một quy ước chứ không phải là một tính năng của React**
 
-**Do I have to name my custom Hooks starting with “`use`”?** Please do. This convention is very important. Without it, we wouldn't be able to automatically check for violations of [rules of Hooks](/docs/hooks-rules.html) because we couldn't tell if a certain function contains calls to Hooks inside of it.
+**Tôi có phải đặt tên cho các Hook tuỳ chỉnh của mình bắt đầu bằng "`use`"?** Hãy làm điều đó, quy ước này rất quan trọng. Nếu không có nó, chúng ta sẽ có thể tự động kiểm tra các vi phạm [những quy tắc trong Hook](/docs/hooks-rules.html) vì chúng ta không thể biết nếu một function có chứa các cuộc gọi đến Hook bên trong nó
 
-**Do two components using the same Hook share state?** No. Custom Hooks are a mechanism to reuse *stateful logic* (such as setting up a subscription and remembering the current value), but every time you use a custom Hook, all state and effects inside of it are fully isolated.
 
-**How does a custom Hook get isolated state?** Each *call* to a Hook gets isolated state. Because we call `useFriendStatus` directly, from React's point of view our component just calls `useState` and `useEffect`. And as we [learned](/docs/hooks-state.html#tip-using-multiple-state-variables) [earlier](/docs/hooks-effect.html#tip-use-multiple-effects-to-separate-concerns), we can call `useState` and `useEffect` many times in one component, and they will be completely independent.
+**Làm thế nào để một Hook tuỳ chỉnh có state cô lập?** Mỗi *cuộc gọi* đến một Hook đều là state cô lập. Bởi vì chúng ta gọi `useFriendStatus` trực tiếp, từ khái niệm của React, component chỉ gọi `useState` và `useEffect`. Và như chúng ta đã [được học](/docs/hooks-state.html#tip-using-multiple-state-variables) [trước đó](/docs/hooks-effect.html#tip-use-multiple-effects-to-separate-concerns), chúng ta có thể gọi `useState` và `useEffect` nhiều lần trong một component, và chúng hoàn toàn cô lập.
 
-### Tip: Pass Information Between Hooks {#tip-pass-information-between-hooks}
+### Mẹo: Tông tin giữa các Hook {#tip-pass-information-between-hooks}
 
-Since Hooks are functions, we can pass information between them.
+Vì Hooks là các function, chúng ta có thể truyền thông tin giữa chúng.
 
-To illustrate this, we'll use another component from our hypothetical chat example. This is a chat message recipient picker that displays whether the currently selected friend is online:
+Để minh hoạ điều này, chúng ta sẽ sử dụng component khác từ ví dụ chat của mình. Đây là tin nhắn hiển thị cho dù người bạn đang chat có online hay không: 
 
 ```js{8-9,13}
 const friendList = [
@@ -184,24 +183,24 @@ function ChatRecipientPicker() {
 }
 ```
 
-We keep the currently chosen friend ID in the `recipientID` state variable, and update it if the user chooses a different friend in the `<select>` picker.
+Chúng ta gán friendID bằng biến state `recipientID`, và câp nhật nó nếu người dùng chọn một người bạn trong thẻ `<select>`.
 
-Because the `useState` Hook call gives us the latest value of the `recipientID` state variable, we can pass it to our custom `useFriendStatus` Hook as an argument:
+Bởi vì lệnh gọi `useState` Hook cung cấp cho chúng ta giá trị mới nhất của biến `recipientID`, chúng ta có thể chuyển nó tới `useFriendStatus` Hook tuỳ chỉnh làm đối số:
 
 ```js
   const [recipientID, setRecipientID] = useState(1);
   const isRecipientOnline = useFriendStatus(recipientID);
 ```
 
-This lets us know whether the *currently selected* friend is online. If we pick a different friend and update the `recipientID` state variable, our `useFriendStatus` Hook will unsubscribe from the previously selected friend, and subscribe to the status of the newly selected one.
+Điều này cho chings ta biết rằng, liệu người bạn đang chọn có online hay không. Nếu chúng ta chọn một người bạn khác và cập nhật biến state `recipientID`, `useFriendStatus` Hook sẽ huỷ đăng ký khỏi người bạn đã chọn trước đó và đăng ký trạng thái cho người mới được chọn.
 
 ## `useYourImagination()` {#useyourimagination}
 
-Custom Hooks offer the flexibility of sharing logic that wasn't possible in React components before. You can write custom Hooks that cover a wide range of use cases like form handling, animation, declarative subscriptions, timers, and probably many more we haven't considered. What's more, you can build Hooks that are just as easy to use as React's built-in features.
+Hooks tuỳ chỉnh cung cấp tính linh hoạt của việc chia sẻ logic mà trước đó có thể có trong các thành phần React. Bạn có thể viết các Hook của riêng bạn bao gồm nhiều trường hợp sử dụng như xử lý form, animation, declarative subscriptions, timers và nhiều hơn nữa. Hơn nữa, bạn có thể xây dựng các Hook dễ sử dụng như các tính năng tích hợp của React.
 
-Try to resist adding abstraction too early. Now that function components can do more, it's likely that the average function component in your codebase will become longer. This is normal -- don't feel like you *have to* immediately split it into Hooks. But we also encourage you to start spotting cases where a custom Hook could hide complex logic behind a simple interface, or help untangle a messy component.
+Cố gắng đừng thêm abstraction quá sớm. Bây giờ các function component có thể làm được nhiều hơn, nó có khả năng là average function component khiến code của bạn dài hơn. Điều nà là bình thường - đừng có cảm giác bạn phải chia nhỏ nó trong Hooks. Nhưng chúng tôi khuyến khích bạn bắt đầu phát hiện các trường hợp trong đó Hook tuỳ biến có thể ẩn logic phức tạp đằng sau một giao diện đơn giản hoặc gỡ rối một thành phần lộn xộn.
 
-For example, maybe you have a complex component that contains a lot of local state that is managed in an ad-hoc way. `useState` doesn't make centralizing the update logic any easier so might you prefer to write it as a [Redux](https://redux.js.org/) reducer:
+Ví dụ: có thể bạn có một component phức tạp chứa nhiều local state đươc quản lý môt cách đặc biệt. `useState` không tập trung cho logic cập nhật dễ dàng hơn vì vậy bạn có thể thích viết nó như [Redux](https://redux.js.org/) reducer:
 
 ```js
 function todosReducer(state, action) {
@@ -218,9 +217,9 @@ function todosReducer(state, action) {
 }
 ```
 
-Reducers are very convenient to test in isolation, and scale to express complex update logic. You can further break them apart into smaller reducers if necessary. However, you might also enjoy the benefits of using React local state, or might not want to install another library.
+Reducers rất thuận tiện để kiểm tra độc lập và chia tỉ lệ để thể hiện logic cập nhật phức tạp. Bạn có thể chia chúng trong các reducers nhỏ hơn nếu cần thiết. Tuy nhiên bạn cũng có thể tận hưởng những lợi ích của việc sử dụng React local state hoặc có thể không muốn cài đặt một thư viện khác
 
-So what if we could write a `useReducer` Hook that lets us manage the *local* state of our component with a reducer? A simplified version of it might look like this:
+Vậy điều gì sảy ra nếu chúng ta viết `useReducer` Hook cho phép quản lý local state của component bằng reducer? Một phiên bản đơn giản hoá của nó có thể trong như thế này:
 
 ```js
 function useReducer(reducer, initialState) {
@@ -235,7 +234,7 @@ function useReducer(reducer, initialState) {
 }
 ```
 
-Now we could use it in our component, and let the reducer drive its state management:
+Bây giờ chúng ta có thể sử dụng nó trong component để reducer điều khiển quản lý state của nó:
 
 ```js{2}
 function Todos() {
@@ -249,4 +248,4 @@ function Todos() {
 }
 ```
 
-The need to manage local state with a reducer in a complex component is common enough that we've built the `useReducer` Hook right into React. You'll find it together with other built-in Hooks in the [Hooks API reference](/docs/hooks-reference.html).
+Nhu cầu quản lý local state với reducer trong một component phức tạp là đủ phổ biến để chúng ta xây dựng `useReducer` Hook trong React. Bạn sẽ tìm thấy nó cùng với các Hook được tích hợp trong các [Hooks API reference](/docs/hooks-reference.html).
