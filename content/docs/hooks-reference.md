@@ -6,17 +6,17 @@ prev: hooks-custom.html
 next: hooks-faq.html
 ---
 
-*Hooks* are a new addition in React 16.8. They let you use state and other React features without writing a class.
+*Hooks* mới được thêm ở phiên bản React 16.8. Cho phép bạn sử dụng state và các chức năng khác của React mà không cần tạo class.
 
-This page describes the APIs for the built-in Hooks in React.
+Trang này mô tả các API cho Hooks tích hợp trong React.
 
-If you're new to Hooks, you might want to check out [the overview](/docs/hooks-overview.html) first. You may also find useful information in the [frequently asked questions](/docs/hooks-faq.html) section.
+Nếu bạn mới sử dụng Hooks, bạn có thể muốn xem [tổng quan](/docs/hooks-overview.html) trước. Bạn cũng có thể tìm thấy thông tin hữu ích trong [câu hỏi thường gặp](/docs/hooks-faq.html)
 
-- [Basic Hooks](#basic-hooks)
+- [Hooks cơ bản](#basic-hooks)
   - [`useState`](#usestate)
   - [`useEffect`](#useeffect)
   - [`useContext`](#usecontext)
-- [Additional Hooks](#additional-hooks)
+- [Hooks nâng cao](#additional-hooks)
   - [`useReducer`](#usereducer)
   - [`useCallback`](#usecallback)
   - [`useMemo`](#usememo)
@@ -25,7 +25,7 @@ If you're new to Hooks, you might want to check out [the overview](/docs/hooks-o
   - [`useLayoutEffect`](#uselayouteffect)
   - [`useDebugValue`](#usedebugvalue)
 
-## Basic Hooks {#basic-hooks}
+## Hooks cơ bản {#basic-hooks}
 
 ### `useState` {#usestate}
 
@@ -33,25 +33,23 @@ If you're new to Hooks, you might want to check out [the overview](/docs/hooks-o
 const [state, setState] = useState(initialState);
 ```
 
-Returns a stateful value, and a function to update it.
+Trả về một state mang giá trị, và một function cập nhật nó.
 
-During the initial render, the returned state (`state`) is the same as the value passed as the first argument (`initialState`).
+Trong lần render đầu tiên, state được return (`state`) giống với giá trị được truyền dưới dạng đối số đầu tiên (`initialState`).
 
-The `setState` function is used to update the state. It accepts a new state value and enqueues a re-render of the component.
+function `setState` được sử dụng để cập nhật lại state. Nó chấp nhận một state với giá trị mới và ghi lại kết quả sau mỗi lần render của component.
+
 
 ```js
 setState(newState);
 ```
 
-During subsequent re-renders, the first value returned by `useState` will always be the most recent state after applying updates.
+Trong các lần render tiếp theo, giá trị đầu tiên được return bởi `useState` sẽ luôn là state gần nhất sau khi được cập nhật.
 
->Note
->
->React guarantees that `setState` function identity is stable and won't change on re-renders. This is why it's safe to omit from the `useEffect` or `useCallback` dependency list.
 
 #### Functional updates {#functional-updates}
 
-If the new state is computed using the previous state, you can pass a function to `setState`. The function will receive the previous value, and return an updated value. Here's an example of a counter component that uses both forms of `setState`:
+Nếu state mới được máy tính sử dụng state trước đó, bạn có thể sử dụng function `setState`. Function này sẽ nhận giá trị trước đó, và return giá trị được cập nhật. Dưới đây là ví dụ về counter component sử dụng  `setState`:
 
 ```js
 function Counter({initialCount}) {
@@ -67,12 +65,12 @@ function Counter({initialCount}) {
 }
 ```
 
-The "+" and "-" buttons use the functional form, because the updated value is based on the previous value. But the "Reset" button uses the normal form, because it always sets the count back to the initial value.
+Nút "+" và "-" sử dụng function form, bởi vì giá trị cập nhật dựa trên giá trị trước đó. Nhưng nút "Reset" sử dụng đối số là giá trị ban đầu, bởi vì nó luôn đặt lại biến `count` về giá trị ban đầu.
 
-> Note
+> Chú thích
 >
-> Unlike the `setState` method found in class components, `useState` does not automatically merge update objects. You can replicate this behavior by combining the function updater form with object spread syntax:
 >
+> Không giống như phương thức `setState` được tìm thấy trong class component, `useState` không dự động hợp cập nhật các object. Bạn có thể thay đổi behavior bằng cú pháp:
 > ```js
 > setState(prevState => {
 >   // Object.assign would also work
@@ -80,11 +78,11 @@ The "+" and "-" buttons use the functional form, because the updated value is ba
 > });
 > ```
 >
-> Another option is `useReducer`, which is more suited for managing state objects that contain multiple sub-values.
+> Một tuỳ chọn khác là `useReducer`, phù hợp hơn để quản lý các state object có chứa nhiều sub-value.
 
 #### Lazy initial state {#lazy-initial-state}
 
-The `initialState` argument is the state used during the initial render. In subsequent renders, it is disregarded. If the initial state is the result of an expensive computation, you may provide a function instead, which will be executed only on the initial render:
+Đối số `initialState` được sử dụng trong lần render đầu tiên. Trong những lần render tiếp theo, nó bị bỏ qua. Nếu trạng thái ban đầu là kết quả của một tính toán, bạn có thể cung cấp một hàm thay thế, nó sẽ chỉ được thực hiện trên lần render ban đầu:
 
 ```js
 const [state, setState] = useState(() => {
@@ -95,9 +93,9 @@ const [state, setState] = useState(() => {
 
 #### Bailing out of a state update {#bailing-out-of-a-state-update}
 
-If you update a State Hook to the same value as the current state, React will bail out without rendering the children or firing effects. (React uses the [`Object.is` comparison algorithm](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description).)
+Nếu bạn cập nhật State Hook về cùng giá trị với giá trị hiện tại, React sẽ giữ nguyên mà không render ra các children hoặc các effect. (React sử dụng [thuật toán `Object.is`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description).))
 
-Note that React may still need to render that specific component again before bailing out. That shouldn't be a concern because React won't unnecessarily go "deeper" into the tree. If you're doing expensive calculations while rendering, you can optimize them with `useMemo`.
+Lưu ý rằng React có thể vẫn cần render lại các component cụ thể nào đó trước khi bailing out. Đó không phải là một vấn đề đáng lo lắng vì React đã không "đi sâu" vào. Nếu bạn đang thực hiện các phép tính trong khi render, bạn có thể tối ưu chúng bằng `useMomo`.
 
 ### `useEffect` {#useeffect}
 
@@ -105,17 +103,17 @@ Note that React may still need to render that specific component again before ba
 useEffect(didUpdate);
 ```
 
-Accepts a function that contains imperative, possibly effectful code.
+Chấp nhận một function chứa mệnh lệnh, có thể giúp cải thiện code.
 
-Mutations, subscriptions, timers, logging, and other side effects are not allowed inside the main body of a function component (referred to as React's _render phase_). Doing so will lead to confusing bugs and inconsistencies in the UI.
+Mutations, subscriptions, timers, logging, and other side effects không được phép bên trong main body của function component. Làm như vậy sẽ dẫn đến lỗi và không nhất quán trong UI.
 
-Instead, use `useEffect`. The function passed to `useEffect` will run after the render is committed to the screen. Think of effects as an escape hatch from React's purely functional world into the imperative world.
+Thay vào đó, hãy sử dụng `useEffect`. Function được truyền cho `useEffect` sẽ chạy sau khi render ra màn hình.
 
-By default, effects run after every completed render, but you can choose to fire it [only when certain values have changed](#conditionally-firing-an-effect).
+Mặc định, các effect chạy sau khi render hoàn thành, nhưng bạn có thể chọn [giá trị nhất định khi đã thay đổi](#conditionally-firing-an-effect).
 
 #### Cleaning up an effect {#cleaning-up-an-effect}
 
-Often, effects create resources that need to be cleaned up before the component leaves the screen, such as a subscription or timer ID. To do this, the function passed to `useEffect` may return a clean-up function. For example, to create a subscription:
+Thông thường các effect tạo ra các tài nguyên cần được dọn sạch trước khi component hoàn thành, chẳng han như subscription hoặc timer ID. Để thực hiện việc này, function được truyền cho `useEffect` có thể trả về clean-up function. Ví dụ: để tạo một subscription:
 
 ```js
 useEffect(() => {
@@ -127,7 +125,7 @@ useEffect(() => {
 });
 ```
 
-The clean-up function runs before the component is removed from the UI to prevent memory leaks. Additionally, if a component renders multiple times (as they typically do), the **previous effect is cleaned up before executing the next effect**. In our example, this means a new subscription is created on every update. To avoid firing an effect on every update, refer to the next section.
+Clean-up function chạy trước khi loại bỏ component khỏi UI để tránh memory leaks. Ngoài ra, nếu một component render nhiều lần (như chúng thường làm), **effect trước đó sẽ được xoá sạch trước khi thực hiện effect tiếp theo**. Trong ví dụ của chúng ta, điều này có nghĩa là đăng ký mới được tạo trên mỗi lần cập nhật, hãy tham khảo phần tiếp theo.
 
 #### Timing of effects {#timing-of-effects}
 
