@@ -278,7 +278,7 @@ Ngoài ra, vì `setState()` tự động [hợp nhất một phần state vào s
 
 Việc chỉ định giá trị prop trên controlled component ngăn người dùng thay đổi đầu vào trừ khi bạn muốn như vậy. Nếu bạn đã chỉ định `value` nhưng đầu vào vẫn có thể chỉnh sửa, bạn có thể đã vô tình đặt `value` thành `undefined` hoặc `null`. 
 
-Đoạn code dưới đây chứng minh điều này (input bị khoá lúc đầu nhưng có thể chỉnh sửa sau một thời gian delay ngắn.)
+Đoạn code dưới đây chứng minh điều này (input được gán giá trị ban đầu nhưng có thể chỉnh sửa trong một thời gian delay ngắn.)
 
 ```javascript
 ReactDOM.render(<input value="hi" />, mountNode);
@@ -289,10 +289,10 @@ setTimeout(function() {
 
 ```
 
-## Alternatives to Controlled Components {#alternatives-to-controlled-components}
+## Các lựa chọn thay thế cho Controlled Components {#alternatives-to-controlled-components}
 
-It can sometimes be tedious to use controlled components, because you need to write an event handler for every way your data can change and pipe all of the input state through a React component. This can become particularly annoying when you are converting a preexisting codebase to React, or integrating a React application with a non-React library. In these situations, you might want to check out [uncontrolled components](/docs/uncontrolled-components.html), an alternative technique for implementing input forms.
+Đôi khi bạn cảm thấy nhàm chán khi sử dụng các controlled component, bởi vì bạn cần phải viết event handle cho mọi trường hợp dữ liệu của bạn có thể thay đổi và chuyển tất cả các state đầu vào thông qua React component. Điều này có thể trở nên khó chịu khi bạn đang chuyển đổi code sang React, hoặc tính hợp cho ứng dụng những thư viện không khônng phải React. Trong những tình huống này, bạn có thể muốn sử dụng các [uncontrolled components](/docs/uncontrolled-components.html), đây là một kỹ thuật thay thế các input form.
 
-## Fully-Fledged Solutions {#fully-fledged-solutions}
+## Các giải pháp đầy đủ {#fully-fledged-solutions}
 
-If you're looking for a complete solution including validation, keeping track of the visited fields, and handling form submission, [Formik](https://jaredpalmer.com/formik) is one of the popular choices. However, it is built on the same principles of controlled components and managing state — so don't neglect to learn them.
+Nếu bạn đang tìm kiếm một giải pháp theo dõi các trường(field) đã truy cập và xử lý submit form, [Formik](https://jaredpalmer.com/formik) là một tromg những lựa chọn cho bạn, Tuy nhiên, nó được xây dựng trên các quy tắc của controlled component và quản lý state - vì thế, không nên bỏ qua việc tìm hiểu nó.
