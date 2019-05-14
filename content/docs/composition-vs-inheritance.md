@@ -1,6 +1,6 @@
 ---
 id: composition-vs-inheritance
-title: Composition vs Inheritance
+title: Kết hợp và kế thừa
 permalink: docs/composition-vs-inheritance.html
 redirect_from:
   - "docs/multiple-components.html"
@@ -8,15 +8,15 @@ prev: lifting-state-up.html
 next: thinking-in-react.html
 ---
 
-React has a powerful composition model, and we recommend using composition instead of inheritance to reuse code between components.
+React là kiểu kết hợp mạnh mẽ và chúng tôi khuyên bạn nên sử dụng kết hợp(composition) thay vì kế thừa(inheritance) giữa các component.
 
-In this section, we will consider a few problems where developers new to React often reach for inheritance, and show how we can solve them with composition.
+Trong phần này, chúng ta sẽ xem xét một vài vấn đề mà các developer mới sử dụng React sử dụng kế thừa(inheritance) và chỉ ra cách chúng ta có thể giải quyết chúng bằng kết hợp(composition)
 
-## Containment {#containment}
+## Chính sách ngăn chặn {#containment}
 
-Some components don't know their children ahead of time. This is especially common for components like `Sidebar` or `Dialog` that represent generic "boxes".
+Một số component không biết phần con(children) của chúng. Điều này đặc biệt phổ biến đồi với các component như `Sidebar` hoặc `Dialog` là kết quả của `boxers`.
 
-We recommend that such components use the special `children` prop to pass children elements directly into their output:
+Chúng tôi khuyên bạn, với các component như thế nên sử dụng `children` prop để truyền trực tiếp các phần tử đầu vào của chúng:
 
 ```js{4}
 function FancyBorder(props) {
@@ -28,7 +28,7 @@ function FancyBorder(props) {
 }
 ```
 
-This lets other components pass arbitrary children to them by nesting the JSX:
+Điều này cho phép các component khá truyền thành phần con tuỳ ý cho chúng bằng code JSX:
 
 ```js{4-9}
 function WelcomeDialog() {
