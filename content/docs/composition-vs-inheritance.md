@@ -47,9 +47,9 @@ function WelcomeDialog() {
 
 **[Try it on CodePen](https://codepen.io/gaearon/pen/ozqNOV?editors=0010)**
 
-Anything inside the `<FancyBorder>` JSX tag gets passed into the `FancyBorder` component as a `children` prop. Since `FancyBorder` renders `{props.children}` inside a `<div>`, the passed elements appear in the final output.
+Mọi thứ bên trong thẻ JSX `<FancyBorder>` đều được chuyển vào component `<FancyBorder>` như một `children` prop. Khi `FancyBorder` render `{props.children}` bên trong `<div>`, các element được truyền vào sẽ hiển thị trong output.
 
-While this is less common, sometimes you might need multiple "holes" in a component. In such cases you may come up with your own convention instead of using `children`:
+Dù điều này không phổ biến, đôi khi bạn có thể cần nhiều "hole" như thế trong component. Trong những trường hợp như vậy, bạn có thể đưa ra quy ước riêng của mình thay vì `children`:
 
 ```js{5,8,18,21}
 function SplitPane(props) {
@@ -80,13 +80,13 @@ function App() {
 
 [**Try it on CodePen**](https://codepen.io/gaearon/pen/gwZOJp?editors=0010)
 
-React elements like `<Contacts />` and `<Chat />` are just objects, so you can pass them as props like any other data. This approach may remind you of "slots" in other libraries but there are no limitations on what you can pass as props in React.
+Các phần tử React như `<Contacts />` và `<Chat />` chỉ là các object, vì vậy bạn có thể truyền chúng dưới dạng props như mọi dữ liệu khác. Cách tiếp cận này có thể nhắc nhở bạn về các "slot" của người dùng trong các thư viện khác nhưng không giới hạn, bạn có thể sử dụng như props trong React.
 
-## Specialization {#specialization}
+## Chuyên sâu {#specialization}
 
-Sometimes we think about components as being "special cases" of other components. For example, we might say that a `WelcomeDialog` is a special case of `Dialog`.
+Đôi khi chúng phải tư duy về các component như là trường hợp đặc biệt (special case) của các component khác. Ví dụ, chúng ta có thể nói rằng `WelcomeDialog` là trường hợp đặc biệt của `Dialog`.
 
-In React, this is also achieved by composition, where a more "specific" component renders a more "generic" one and configures it with props:
+Trong React, điều này cũng làm được bằng cách tự tạo ra, trong đó, một component xác định cụ thể sẽ hiển thị một component chung chung và một cấu hình với các props:
 
 ```js{5,8,16-18}
 function Dialog(props) {
@@ -113,7 +113,7 @@ function WelcomeDialog() {
 
 [**Try it on CodePen**](https://codepen.io/gaearon/pen/kkEaOZ?editors=0010)
 
-Composition works equally well for components defined as classes:
+Component hoạt động như nhau trong các component được định nghĩa như class:
 
 ```js{10,27-31}
 function Dialog(props) {
@@ -163,10 +163,10 @@ class SignUpDialog extends React.Component {
 
 [**Try it on CodePen**](https://codepen.io/gaearon/pen/gwZbYa?editors=0010)
 
-## So What About Inheritance? {#so-what-about-inheritance}
+## Kế thừa thì sao? {#so-what-about-inheritance}
 
-At Facebook, we use React in thousands of components, and we haven't found any use cases where we would recommend creating component inheritance hierarchies.
+Tại Facebook, chúng tôi sử dụng React trong hàng ngàn thành phần và chúng tôi đã tìm thấy bất cứ trường hợp nào sử dụng nào đó, chúng tôi khuyên bạn nên tạo cấu trúc phân cấp kế thừa thành phần.
 
-Props and composition give you all the flexibility you need to customize a component's look and behavior in an explicit and safe way. Remember that components may accept arbitrary props, including primitive values, React elements, or functions.
+Props và sự kết hợp cung cấp cho bạn sự linh hoạt mà bạn cần để tuỳ chỉnh giao diện và hành vi của component theo cách rõ ràng và an toàn. Hãy nhớ rằng các thành phần có thể chấp nhận các props tuỳ ý, bao gồm các giá trị nguyên thuỷ, React element hoặc các function.
 
-If you want to reuse non-UI functionality between components, we suggest extracting it into a separate JavaScript module. The components may import it and use that function, object, or a class, without extending it.
+Nếu bạn muốn tái sử dụng các non-UI function giữa các component, chúng tôi khuyên bạn nên trích xuất(extracting) nó thành một module Javascript. Các component có thể nhập(import) và sử dụng function, object hoặc class mà không cần mở rộng nó.
