@@ -1,22 +1,22 @@
 ---
 id: accessibility
-title: Accessibility
+title: Kả năng tiếp cận(Accessibility)
 permalink: docs/accessibility.html
 ---
 
-## Why Accessibility? {#why-accessibility}
+## Tại sao lại nói đến khả năng tiếp cận? {#why-accessibility}
 
-Web accessibility (also referred to as [**a11y**](https://en.wiktionary.org/wiki/a11y)) is the design and creation of websites that can be used by everyone. Accessibility support is necessary to allow assistive technology to interpret web pages.
+Khả năng tiếp cận web(còn được gọi là [**a11y**](https://en.wiktionary.org/wiki/a11y)) là thiết kế và tạo ra các trang web mà mọi người có thể sử dụng được. Khả năng tiếp cận sẽ hỗ trợ việc tìm hiểu công nghệ và tạo ra các trang web.
 
-React fully supports building accessible websites, often by using standard HTML techniques.
+React hỗ trợ đầy đủ việc xây dựng các trang wen có thể truy cập được, bằng cách tạo ra các bản HTML tiêu chuẩn.
 
-## Standards and Guidelines {#standards-and-guidelines}
+## Cơ bản và hướng dẫn {#standards-and-guidelines}
 
 ### WCAG {#wcag}
 
-The [Web Content Accessibility Guidelines](https://www.w3.org/WAI/intro/wcag) provides guidelines for creating accessible web sites.
+[Nguyên tắc tiếp cận Web](https://www.w3.org/WAI/intro/wcag) cung cấp các hướng dẫn để tạo ra các trang web có thể truy cập được.
 
-The following WCAG checklists provide an overview:
+Danh sách WCAG sau đây cung cấp một cái nhìn tổng quan:
 
 - [WCAG checklist from Wuhcag](https://www.wuhcag.com/wcag-checklist/)
 - [WCAG checklist from WebAIM](https://webaim.org/standards/wcag/checklist)
@@ -24,9 +24,9 @@ The following WCAG checklists provide an overview:
 
 ### WAI-ARIA {#wai-aria}
 
-The [Web Accessibility Initiative - Accessible Rich Internet Applications](https://www.w3.org/WAI/intro/aria) document contains techniques for building fully accessible JavaScript widgets.
+Tài liệu [Web Accessibility Initiative - Accessible Rich Internet Applications](https://www.w3.org/WAI/intro/aria) chứa đầy đủ các phương pháp kỹ thuật để xây dựng các tiện tích Javascript.
 
-Note that all `aria-*` HTML attributes are fully supported in JSX. Whereas most DOM properties and attributes in React are camelCased, these attributes should be hyphen-cased (also known as kebab-case, lisp-case, etc) as they are in plain HTML:
+Chú ý rằng tất cả các thuộc tính HTML aria-* được hỗ trợ đầy đủ trong JSX. Trong hầu hết các thuộc tính (antribute) và tính chất(properties) DOM trong React đều được cameCased, các thuộc tính này phải là gạch nối (hyphen-case)(còn được gọi là kebab-case hay lisp-case,...) vì chúng ở dạng HTML đơn giản.
 
 ```javascript{3,4}
 <input
@@ -40,13 +40,12 @@ Note that all `aria-*` HTML attributes are fully supported in JSX. Whereas most 
 ```
 
 ## Semantic HTML {#semantic-html}
-Semantic HTML is the foundation of accessibility in a web application. Using the various HTML elements to reinforce the meaning of information
-in our websites will often give us accessibility for free.
+Semantic HTML(ngôn ngữ HTML) là nền tảng của khả năng truy cập trong một ứng dụng web. Sử dụng các HTML element để củng cố ngữ nghĩa của các thông tin trong các trang web.
 
 - [MDN HTML elements reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)
 
-Sometimes we break HTML semantics when we add `<div>` elements to our JSX to make our React code work, especially when working with lists (`<ol>`, `<ul>` and `<dl>`) and the HTML `<table>`.
-In these cases we should rather use [React Fragments](/docs/fragments.html) to group together multiple elements.
+Đôi khi, chúng ta phá vỡ HTML semantics(ngữ nghĩa) khi chúng ta thêm thể `div` vào JSX để làm cho code React của chúng ta hoạt động, đặc biệt là khi làm việc với các thẻ (`<ol>`, `<ul>`, `<dl>`) và HTML `<table>`.
+Trong những trường hợp này, chúng ta nên sử dụng [React Fragments](/docs/fragments.html) để nhóm nhiều element lại với nhau.
 
 For example,
 
@@ -73,7 +72,7 @@ function Glossary(props) {
 }
 ```
 
-You can map a collection of items to an array of fragments as you would any other type of element as well:
+Bạn có thể map một items collection thành một array như bất kỳ loại element nào khác :
 
 ```javascript{6,9}
 function Glossary(props) {
@@ -91,7 +90,7 @@ function Glossary(props) {
 }
 ```
 
-When you don't need any props on the Fragment tag you can use the [short syntax](/docs/fragments.html#short-syntax), if your tooling supports it:
+Khi bạn không cần bất kỳ props nào trên Fragment bạn có thể sử dụng [short syntax(cú pháp ngắn)](/docs/fragments.html#short-syntax), nếu công cụ của bạn hỗ trợ nó:
 
 ```javascript{3,6}
 function ListItem({ item }) {
@@ -109,37 +108,38 @@ For more info, see [the Fragments documentation](/docs/fragments.html).
 ## Accessible Forms {#accessible-forms}
 
 ### Labeling {#labeling}
-Every HTML form control, such as `<input>` and `<textarea>`, needs to be labeled accessibly. We need to provide descriptive labels that are also exposed to screen readers.
+Mọi HTML form control như `<input>` và `<textarea>` cần được gắn các label. Chúng ta cần cung cấp các label mô tả cũng được hiển thị trên trình duyệt.
 
-The following resources show us how to do this:
+Các mã nguồn dưới đây cho chúng ta thấy cách thực hiện vấn đề này:
 
-- [The W3C shows us how to label elements](https://www.w3.org/WAI/tutorials/forms/labels/)
-- [WebAIM shows us how to label elements](https://webaim.org/techniques/forms/controls)
-- [The Paciello Group explains accessible names](https://www.paciellogroup.com/blog/2017/04/what-is-an-accessible-name/)
+- [W3C có thể chỉ cho chúng ta các gắn các label element](https://www.w3.org/WAI/tutorials/forms/labels/)
+- [WebAIM cũng vậy](https://webaim.org/techniques/forms/controls)
+- [Paciello Group giải thích những cái tên dễ tiếp cận](https://www.paciellogroup.com/blog/2017/04/what-is-an-accessible-name/)
 
-Although these standard HTML practices can be directly used in React, note that the `for` attribute is written as `htmlFor` in JSX:
+Mặc dù các standart HTML practices(chuẩn) có thể được sử dụng trực tiếp trong React, lưu ý rằng thuộc tính `for` được viết dưới dạng `htmlFor` trong JSX:
 
 ```javascript{1}
 <label htmlFor="namedInput">Name:</label>
 <input id="namedInput" type="text" name="name"/>
 ```
 
-### Notifying the user of errors {#notifying-the-user-of-errors}
+### Thông báo lỗi cho người dùng {#notifying-the-user-of-errors}
 
-Error situations need to be understood by all users. The following link shows us how to expose error texts to screen readers as well:
+Tất cả người dùng đều cần phải hiểu những tình huống lỗi. Liên kết dưới đây cho chúng ta biết cách hiển thị các văn bản lỗi cho trình duyệt.
 
-- [The W3C demonstrates user notifications](https://www.w3.org/WAI/tutorials/forms/notifications/)
-- [WebAIM looks at form validation](https://webaim.org/techniques/formvalidation/)
+- [W3C dví dụ nhỏ về thông báo cho người dùng](https://www.w3.org/WAI/tutorials/forms/notifications/)
+- [WebAIM form validation](https://webaim.org/techniques/formvalidation/)
 
 ## Focus Control {#focus-control}
 
-Ensure that your web application can be fully operated with the keyboard only:
+Đảm bảo rằng ứng dụng web của bạn có thể chỉ vận hành được với bàn phím:
 
-- [WebAIM talks about keyboard accessibility](https://webaim.org/techniques/keyboard/)
+- [WebAIM nói về khả năng truy cập bàn phím](https://webaim.org/techniques/keyboard/)
 
 ### Keyboard focus and focus outline {#keyboard-focus-and-focus-outline}
 
 Keyboard focus refers to the current element in the DOM that is selected to accept input from the keyboard. We see it everywhere as a focus outline similar to that shown in the following image:
+Keyboard forcus
 
 <img src="../images/docs/keyboard-focus.png" alt="Blue keyboard focus outline around a selected link." />
 
