@@ -10,7 +10,7 @@ prev: hooks-overview.html
 
 Ở [trang giới thiệu](/docs/hooks-intro.html) có ví dụ này để làm quen với Hooks
 
-```js{4-5}
+```js
 import React, { useState } from 'react';
 
 function Example() {

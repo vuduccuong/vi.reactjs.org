@@ -129,19 +129,19 @@ Clean-up function chạy trước khi loại bỏ component khỏi UI để trá
 
 #### Timing of effects {#timing-of-effects}
 
-Unlike `componentDidMount` and `componentDidUpdate`, the function passed to `useEffect` fires **after** layout and paint, during a deferred event. This makes it suitable for the many common side effects, like setting up subscriptions and event handlers, because most types of work shouldn't block the browser from updating the screen.
+Không giống như `componentDidMount` và `componentDidUpdate`, function dùng `useEffect` kích hoạt **sau khi** bố trí layout và vẽ trong một event bị trì hoãn. Điều này làm cho nó phù hợp với nhiều side effect dùng chung, giống như việc thiết lập đăng ký và sử lý event, bởi vì hầu hết các loại tác động không thể chặn trình duyệt cập nhật lại màn hình.
 
-However, not all effects can be deferred. For example, a DOM mutation that is visible to the user must fire synchronously before the next paint so that the user does not perceive a visual inconsistency. (The distinction is conceptually similar to passive versus active event listeners.) For these types of effects, React provides one additional Hook called [`useLayoutEffect`](#uselayouteffect). It has the same signature as `useEffect`, and only differs in when it is fired.
+Tuy nhiên, không phải tất cả các effect có thể được hoãn lại. Ví dụ, một DOM hiển thị cho người dùng phải bắn(fires) đồng bộ(asynchronously) trước lần vẽ lại tiếp theo để người dùng nhận thấy sự không nhất quá trực quan. Đối với sự kiện này, React cung cấp thêm một Hook gọi là [`useLayoutEffect`](#uselayouteffect). Nó tương tự như `useEffect` và chỉ khác khi nó được triển khai.
 
-Although `useEffect` is deferred until after the browser has painted, it's guaranteed to fire before any new renders. React will always flush a previous render's effects before starting a new update.
+Mặc dù `useEffect` được trì hoãn cho đễ khi trình duyệt được vẽ lại, nó vẫn đảm bảo sẽ kích hoạt trước khi có bất kì render mới nào. React sẽ luôn xoá một render effect trước đó khi bắt đầu một cập nhật mới.
 
-#### Conditionally firing an effect {#conditionally-firing-an-effect}
+#### Điều kiện để bắn một effect {#conditionally-firing-an-effect}
 
-The default behavior for effects is to fire the effect after every completed render. That way an effect is always recreated if one of its dependencies changes.
+Hành vi(behavior) mặc định cho các effect là kích hoạt effect sau mỗi lần hoàn thành. Bằng cách đó, một effect luôn được tạo lại nếu một trong những phụ thuộc(dependencies) của nó thay đổi.
 
-However, this may be overkill in some cases, like the subscription example from the previous section. We don't need to create a new subscription on every update, only if the `source` props has changed.
+Tuy nhiên, điều này có thể là quá mức cần thiết trong một số trường hợp, giống như ví dụ ở lần trước. Chúng ta không cần phải tạo ra một đăng ký(subscription) mới trong mỗi lần cập nhật, chỉ khi `source` props đã thay đổi. 
 
-To implement this, pass a second argument to `useEffect` that is the array of values that the effect depends on. Our updated example now looks like this:
+Để thực hiện đaieeuf này, hãy truyền một tham số thứ hai cho `useEffect`, đó là mảng các giá trị mà effect phụ thuộc vào. Ví dụ cập nhật của chúng ta bây giờ trông như thế này:
 
 ```js
 useEffect(
@@ -154,21 +154,19 @@ useEffect(
   [props.source],
 );
 ```
+Bây giờ, đăng ký(subscription) sẽ chỉ được tạo lại khi `props.source` thay đổi.
 
-Now the subscription will only be recreated when `props.source` changes.
+>Chú thích
+>
+>Nếu bạn sử dụng tối ưu hoá này, hãy đảm bảo mảng bao gồm **tất cả các giá trị từ component scope (chẳng hạn như props và state) thay đổi theo thời gian và được sử dụng bởi effect**. Nếu không, code của bạn sẽ tham chiếu các giá trị cũ từ các lần render trước đó. Tìm hiểu thêm về [các xử lý với các function](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) và phải làm gì khi [các giá trị mảng thay đổi quá thường xuyên](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often).
+>
+>Nếu bạn muốn chạy một effect và làm sạch nó chỉ một lần (trên mout và unmount), bạn có thể chuyển một mảng trống làm đối số thứ hai. Điều này nói với React rằng effect của bạn không phụ thuộc vào bất cứ giá trị nào của props hoặc state, do đó nó không bao giờ cần phải chạy lại. Điều này được xử lý như một trường hợp đặc biệt - nó diễn ra trực tiếp từ cách mảng phụ thuộc luôn hoạt động.
+>
+>Nếu bạn vượt qua(pass) một mảng trống (`[]`), các props và state bên trong effect sẽ luôn có các giá trị ban đầu của chúng. Trong khi chuyển `[]` là đối số thứ hai gần hơn với mô hình `componentDidMount` và `componentWillUnmount`, thường có các giải pháp tốt hơn để tránh các effect chạy lại thường xuyên. Ngoài ra, đừng quên rằng React trì hoãn việc sử dụng `useEffect` cho đến khi trình duyệt đã vẽ xong, do đó, việc làm thêm sẽ ít lỗi hơn.
+>
+>Chúng tôi khuyên bạn nên sử dụng [`exhaustive-deps`](https://github.com/facebook/react/issues/14920), nó là một phần của gói [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation). Nó cảnh báo khi các phụ thuộc được chỉ định không xác định và đề nghị sửa chữa.
 
->Note
->
->If you use this optimization, make sure the array includes **all values from the component scope (such as props and state) that change over time and that are used by the effect**. Otherwise, your code will reference stale values from previous renders. Learn more about [how to deal with functions](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) and what to do when the [array values change too often](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often).
->
->If you want to run an effect and clean it up only once (on mount and unmount), you can pass an empty array (`[]`) as a second argument. This tells React that your effect doesn't depend on *any* values from props or state, so it never needs to re-run. This isn't handled as a special case -- it follows directly from how the dependencies array always works.
->
->If you pass an empty array (`[]`), the props and state as inside the effect will always have their initial values. While passing `[]` as the second argument is closer to the familiar `componentDidMount` and `componentWillUnmount` mental model, there are usually [better](/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies) [solutions](/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often) to avoid re-running effects too often. Also, don't forget that React defers running `useEffect` until after the browser has painted, so doing extra work is less of a problem.
->
->
->We recommend using the [`exhaustive-deps`](https://github.com/facebook/react/issues/14920) rule as part of our [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation) package. It warns when dependencies are specified incorrectly and suggests a fix.
-
-The array of dependencies is not passed as arguments to the effect function. Conceptually, though, that's what they represent: every value referenced inside the effect function should also appear in the dependencies array. In the future, a sufficiently advanced compiler could create this array automatically.
+Mảng phụ thuộc(dependencies) không được truyền dưới dạng đối số cho effect function. Tuy nhiên, về mặt khái niệm, đó là những gì họ thể hiện: mọi giá trị được tham chiếu bên trong effect function cũng sẽ xuất hiện trong mảng phụ thuộc. Trong tương lai, một trình biên dịch đủ sịn xò để có thể tạo ra mảng này.
 
 ### `useContext` {#usecontext}
 
@@ -176,27 +174,26 @@ The array of dependencies is not passed as arguments to the effect function. Con
 const value = useContext(MyContext);
 ```
 
-Accepts a context object (the value returned from `React.createContext`) and returns the current context value for that context. The current context value is determined by the `value` prop of the nearest `<MyContext.Provider>` above the calling component in the tree.
+Chấp nhận một context object(giá trị được trả về từ `React.createContext`) và trả về context value hiện tại cho context đó. Context hiện tại được xác định bởi `giá trị` props của `<MyContext.Provider>` gần nhất trên component gọi trong cây (tree).
 
-When the nearest `<MyContext.Provider>` above the component updates, this Hook will trigger a rerender with the latest context `value` passed to that `MyContext` provider.
+Khi `<MyContext.Provider>` gần nhất cập nhật component, Hook sẽ kích hoạt một render với context `value` được truyền cho `MyContext` provider.
 
-Don't forget that the argument to `useContext` must be the *context object itself*:
+Đừng quên rằng đối số để sử dụng `useContext` phải là *chính context object*:
 
  * **Correct:** `useContext(MyContext)`
  * **Incorrect:** `useContext(MyContext.Consumer)`
  * **Incorrect:** `useContext(MyContext.Provider)`
 
-A component calling `useContext` will always re-render when the context value changes. If re-rendering the component is expensive, you can [optimize it by using memoization](https://github.com/facebook/react/issues/15156#issuecomment-474590693).
+Một component gọi `useContext` sẽ luôn render lại khi giá trị context thay đổi. Nếu render lại component *đắt tiền*(expensive), bạn có thể tối ưu hoá nó bằng [sử dụng ghi nhớ(memoization)](https://github.com/facebook/react/issues/15156#issuecomment-474590693).
 
->Tip
+>Mẹo
+>Nếu bạn quen thuộc với context API trước Hook, `useContext(MyContext)` tường đương với `static contextType = MyContext` trong class, hoặc với `<MyContext.Consumer>`.
 >
->If you're familiar with the context API before Hooks, `useContext(MyContext)` is equivalent to `static contextType = MyContext` in a class, or to `<MyContext.Consumer>`.
->
->`useContext(MyContext)` only lets you *read* the context and subscribe to its changes. You still need a `<MyContext.Provider>` above in the tree to *provide* the value for this context.
+>`useContext(MyContext)` chỉ cho phép bạn đọc context và đăng ký thay đổi đăng ký(subscribe) của nó. Bạn vẫn cần một `<MyContext.Provider>` ở tree để cung cấp giá trị cho context.
 
-## Additional Hooks {#additional-hooks}
+## Hooks bổ sung {#additional-hooks}
 
-The following Hooks are either variants of the basic ones from the previous section, or only needed for specific edge cases. Don't stress about learning them up front.
+Các Hook sau đây là các biến thể của Hook cơ bản từ phần trước hoặc chỉ cần cho các trường hợp cụ thể. Không nhấn mạnh về việc học chúng lên trước.
 
 ### `useReducer` {#usereducer}
 
@@ -204,11 +201,11 @@ The following Hooks are either variants of the basic ones from the previous sect
 const [state, dispatch] = useReducer(reducer, initialArg, init);
 ```
 
-An alternative to [`useState`](#usestate). Accepts a reducer of type `(state, action) => newState`, and returns the current state paired with a `dispatch` method. (If you're familiar with Redux, you already know how this works.)
+Một thay thế cho `useState`. Nó cho phép một reducer loại `(state, action) => newState`, và trả về state hiện tại được ghép nối với một phương thức `dispatch`. (Nếu bạn quen thuộc với Redux, bạn đã biết cách thức hoạt động của nó)
 
-`useReducer` is usually preferable to `useState` when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one. `useReducer` also lets you optimize performance for components that trigger deep updates because [you can pass `dispatch` down instead of callbacks](/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down).
+`useReducer` thường được ưu tiên sử dụng state khi có state logic phức tạp liên quan đến nhiều giá trị phụ hoặc khi state tiếp theo phụ thuộc vào state trước đó. `useReducer` cũng cho phép bạn tối ưu hoá hiệu suất cho các component kích hoạt cập nhật sâu vì [bạn có thể `dispath` xuống thay vì callback](/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down).
 
-Here's the counter example from the [`useState`](#usestate) section, rewritten to use a reducer:
+Đây là ví dụ về count từ phần [`useState`](#usestate) trước đó được viết lại sử dụng reducer:
 
 ```js
 const initialState = {count: 0};
@@ -236,30 +233,30 @@ function Counter({initialState}) {
 }
 ```
 
->Note
->
->React guarantees that `dispatch` function identity is stable and won't change on re-renders. This is why it's safe to omit from the `useEffect` or `useCallback` dependency list.
+>Chú ý
 
-#### Specifying the initial state {#specifying-the-initial-state}
+>React đảm bảo rằng danh tính `dispatch` function ổn định và giành được sự thay đổi khi render lại. Đây là lý do tại sao nó lại an toàn khi bỏ qua danh sách phụ thuộc `useEffect` hoặc `useCallback`.
 
-There’s two different ways to initialize `useReducer` state. You may choose either one depending on the use case. The simplest way to pass the initial state as a second argument:
+#### Chỉ định trạng thái ban đầu {#specifying-the-initial-state}
 
-```js{3}
+Có hai cách khác nhau để khởi tạo `useReducer` state. Bạn có thể chọn một trong hai tuỳ thuộc vào trường hợp sử dụng. Cách đơn giản nhất để pass state ban đầu là đối số thứ hai:
+
+```js
   const [state, dispatch] = useReducer(
     reducer,
     {count: initialCount}
   );
 ```
 
->Note
+>Chú thích
 >
->React doesn’t use the `state = initialState` argument convention popularized by Redux. The initial value sometimes needs to depend on props and so is specified from the Hook call instead. If you feel strongly about this, you can call `useReducer(reducer, undefined, reducer)` to emulate the Redux behavior, but it's not encouraged.
+>React không sử dụng quy ước đối số `state = initialState` phổ biến bở Redux. Giá trị ban đầu đôi khi cần phụ thuộc vào props và do đó được chỉ định từ lệnh gọi Hook thay thế. Nếu bạn cảm thấy bạn đủ giỏi, bạn có thể gọi `useReducer(reducer, undefined, reducer)` để mô phỏng hành vi Redux, nhưng nó không được khuyến khích.
 
 #### Lazy initialization {#lazy-initialization}
 
-You can also create the initial state lazily. To do this, you can pass an `init` function as the third argument. The initial state will be set to `init(initialArg)`.
+Bạn cũng có thể tạo state ban đầu một cách lười biếng(lazy). Để làm điều này, bạn có thể truyền một `init` function làm đối số thử ba. State ban đầu sẽ được đặt thành `init(initialArg)`.
 
-It lets you extract the logic for calculating the initial state outside the reducer. This is also handy for resetting the state later in response to an action:
+Nó cho phép bạn trích xuất(extract) logic để tính toán state ban đầu bên ngoài reducer. Điều này cũng thuận tiện cho việc đặt lại state sau này để phản hồi(response) một hành động.
 
 ```js{1-3,11-12,19,24}
 function init(initialCount) {
