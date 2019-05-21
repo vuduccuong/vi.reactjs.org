@@ -292,11 +292,11 @@ function Counter({initialCount}) {
 }
 ```
 
-#### Bailing out of a dispatch {#bailing-out-of-a-dispatch}
+#### Bailing out of a dispatch(???) {#bailing-out-of-a-dispatch}
 
-If you return the same value from a Reducer Hook as the current state, React will bail out without rendering the children or firing effects. (React uses the [`Object.is` comparison algorithm](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description).)
+Nếu bạn trả về cùng một dữ liệu từ Reducer Hook như state hiện tại, React sẽ đảm bảo không hiển thị các effect con hoặc bắn các effect. (React sử dụng [`thuật toán so sánh Object.is](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description).)
 
-Note that React may still need to render that specific component again before bailing out. That shouldn't be a concern because React won't unnecessarily go "deeper" into the tree. If you're doing expensive calculations while rendering, you can optimize them with `useMemo`.
+Lưu ý rằng React có thể vẫn cần render lại component cụ thể nào đó trước khi bảo lãnh(bailing out). Nếu bạn đang thực hiện các phép tính trong khi render, bạn có thể tối ưu hoá chúng bằng `useMemo`.
 
 ### `useCallback` {#usecallback}
 
@@ -309,17 +309,18 @@ const memoizedCallback = useCallback(
 );
 ```
 
-Returns a [memoized](https://en.wikipedia.org/wiki/Memoization) callback.
+Trả về một callback ghi nhớ([memoized](https://en.wikipedia.org/wiki/Memoization) callback)
 
-Pass an inline callback and an array of dependencies. `useCallback` will return a memoized version of the callback that only changes if one of the dependencies has changed. This is useful when passing callbacks to optimized child components that rely on reference equality to prevent unnecessary renders (e.g. `shouldComponentUpdate`).
+Vượt qua một lời gọi nội tuyến (inline callback) và một array of dependencies. `useCallback` sẽ trả về một phiên bản ghi nhớ(memoized version) của callback chỉ thay đổi nếu một trong các dependencies thay đổi. Điều này hữu ích khi chuyển các callback đến các component con được tối ưu hoá để ngăn chặn việc render không cần thiết (ví dụ `shouldComponentUpdate`).
 
-`useCallback(fn, deps)` is equivalent to `useMemo(() => fn, deps)`.
 
-> Note
+`useCallback(fn, deps)` tương đương `useMemo(() => fn, deps)`.
+
+> Chú ý
 >
-> The array of dependencies is not passed as arguments to the callback. Conceptually, though, that's what they represent: every value referenced inside the callback should also appear in the dependencies array. In the future, a sufficiently advanced compiler could create this array automatically.
+>Mảng phụ thuộc(array of dependencies) không được truyền dưới dạng đối số cho callback, Tuy nhiên, về mặt khái niệmm đó là những gì nó thể hiện: Mọi quá trị được tham chiếu bên trong hàm callback cũng sẽ xuất hiện trong array dependencies. Trong tương lai, một trình biên dịch sịn xò có thể tự động tạo mảng này.
 >
-> We recommend using the [`exhaustive-deps`](https://github.com/facebook/react/issues/14920) rule as part of our [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation) package. It warns when dependencies are specified incorrectly and suggests a fix.
+Chúng tôi khuyên bạn sử dụng quy tắc [`exhaustive-deps`](https://github.com/facebook/react/issues/14920) là một phần của [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation). Nó cảnh báo khi các dependencies được chỉ định không chính xác và đề nghị sửa chữa.
 
 ### `useMemo` {#usememo}
 
@@ -327,21 +328,21 @@ Pass an inline callback and an array of dependencies. `useCallback` will return 
 const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
 ```
 
-Returns a [memoized](https://en.wikipedia.org/wiki/Memoization) value.
+Trả về một giá trị ghi nhớ([memoized](https://en.wikipedia.org/wiki/Memoization)).
 
-Pass a "create" function and an array of dependencies. `useMemo` will only recompute the memoized value when one of the dependencies has changed. This optimization helps to avoid expensive calculations on every render.
+Chấp nhận một "create" function và một array dependencies. `useMomo` sẽ chỉ tính lại giá trị ghi nhớ khi một trong các dependencies thay đổi. Tối ưu hoá này giúp tránh các tính toán ở mỗi lần render.
 
-Remember that the function passed to `useMemo` runs during rendering. Don't do anything there that you wouldn't normally do while rendering. For example, side effects belong in `useEffect`, not `useMemo`.
+Hãy nhớ rằng function được truyền cho `useMemo` chạy trong khi render. Đừng làm điều gì mà bạn sẽ thường làm khi render. Ví dụ:  side effect về `useEffect`, không sử dụng `useMemo`.
 
-If no array is provided, a new value will be computed on every render.
+Nếu không có mảng nào được cung cấp, một giá trị mới sẽ được tính trên mỗi lần render.
 
-**You may rely on `useMemo` as a performance optimization, not as a semantic guarantee.** In the future, React may choose to "forget" some previously memoized values and recalculate them on next render, e.g. to free memory for offscreen components. Write your code so that it still works without `useMemo` — and then add it to optimize performance.
+**Bạn có thể dựa vào `useMemo` như một tối ưu hoá hiệu suất, không phải là một đảm bảo ngữ nghĩa.** Trong tương lai, React có thể chọn để quên đi một số giá trị được ghi nhớ trước đó và tính toán lại chúng trong lần render tiếp theo. ví dụ: để giải phóng bộ nhớ cho các component ngoài màn hình. Code của bạn có thể vẫn hoạt động bình thường mà không cần sử dụng `useMemo` - và sau đó thêm nó để tối ưu hoá hiệu suất.
 
-> Note
+> Chú ý
 >
-> The array of dependencies is not passed as arguments to the function. Conceptually, though, that's what they represent: every value referenced inside the function should also appear in the dependencies array. In the future, a sufficiently advanced compiler could create this array automatically.
+> Mảng phụ thuộc(array of dependencies) không được truyền dưới dạng đối số cho callback, Tuy nhiên, về mặt khái niệmm đó là những gì nó thể hiện: Mọi quá trị được tham chiếu bên trong hàm callback cũng sẽ xuất hiện trong array dependencies. Trong tương lai, một trình biên dịch sịn xò có thể tự động tạo mảng này.
 >
-> We recommend using the [`exhaustive-deps`](https://github.com/facebook/react/issues/14920) rule as part of our [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation) package. It warns when dependencies are specified incorrectly and suggests a fix.
+> Chúng tôi khuyên bạn sử dụng quy tắc exhaustive-deps là một phần của eslint-plugin-react-hooks. Nó cảnh báo khi các dependencies được chỉ định không chính xác và đề nghị sửa chữa
 
 ### `useRef` {#useref}
 
@@ -349,9 +350,9 @@ If no array is provided, a new value will be computed on every render.
 const refContainer = useRef(initialValue);
 ```
 
-`useRef` returns a mutable ref object whose `.current` property is initialized to the passed argument (`initialValue`). The returned object will persist for the full lifetime of the component.
+`useRef` trả về một ref object có thể thay đổi, có thuộc tính `.current` hiện được khởi tạo cho đối số được truyền (`initialValue`). Object trả về sẽ tồn tại trong suất bòng đời của component.
 
-A common use case is to access a child imperatively:
+Một trường hợp sử dụng phổ biến là truy cập một child imperatively:
 
 ```js
 function TextInputWithFocusButton() {
@@ -369,15 +370,15 @@ function TextInputWithFocusButton() {
 }
 ```
 
-Essentially, `useRef` is like a "box" that can hold a mutable value in its `.current` property.
+Về cơ bản, `useRef` giống như cái hộp, có thể chứa giá trị có thể thay đổi thuộc tính hiện tại (`.current` property) của nó.
 
-You might be familiar with refs primarily as a way to [access the DOM](/docs/refs-and-the-dom.html). If you pass a ref object to React with `<div ref={myRef} />`, React will set its `.current` property to the corresponding DOM node whenever that node changes.
+Bạn có thể đã quen thuộc với các ref như cách [truy cập DOM](/docs/refs-and-the-dom.html). Nếu bạn di chuyển một đối tưởng ref cho React với `<div ref={myRef} />`, React sẽ đặt thuộc tính hiện tại của nó cho nút DOM tương ứng bất cứ khi nào nút đó thay đổi.
 
-However, `useRef()` is useful for more than the `ref` attribute. It's [handy for keeping any mutable value around](/docs/hooks-faq.html#is-there-something-like-instance-variables) similar to how you'd use instance fields in classes.
+Tuy nhiên, `useRef()` hữu ích hơn nhiều so với thuộc tính `ref`. Nó có sẵn để lưu bất cứ giá trị có thể thay đổi nào tương tự như cách bạn sử dụng các trường đối tượng trong class.
 
-This works because `useRef()` creates a plain JavaScript object. The only difference between `useRef()` and creating a `{current: ...}` object yourself is that `useRef` will give you the same ref object on every render.
+Điều này hoạt động vì `useRef()` tạo một đối tượng Javascript đơn giản.  Sự khác biệt duy nhất giữa `useRef()` và tự tạo một đối tượng `<div ref={myRef} />` là `useRef` sẽ cung cấp cho bạn cùng một object trên mỗi lần render.
 
-Keep in mind that `useRef` *doesn't* notify you when its content changes. Mutating the `.current` property doesn't cause a re-render. If you want to run some code when React attaches or detaches a ref to a DOM node, you may want to use a [callback ref](/docs/hooks-faq.html#how-can-i-measure-a-dom-node) instead.
+Hãy nhớ rằng `useRef` *không* thông báo cho bạn khi nội dung của nó thay đổi. Đột biến(mutating) thuộc tính hiện tại(`.current property) không thể làm render lại. Nếu bạn muốn chạy một số mã khi React đính kèm hoặc tách một ref cho nút DOM, bạn có thể muốn sử dụng [callback ref](/docs/hooks-faq.html#how-can-i-measure-a-dom-node)
 
 
 ### `useImperativeHandle` {#useimperativehandle}
@@ -386,7 +387,7 @@ Keep in mind that `useRef` *doesn't* notify you when its content changes. Mutati
 useImperativeHandle(ref, createHandle, [deps])
 ```
 
-`useImperativeHandle` customizes the instance value that is exposed to parent components when using `ref`. As always, imperative code using refs should be avoided in most cases. `useImperativeHandle` should be used with `forwardRef`:
+`useImperativeHandle` tuỳ chỉnh giá trị để được hiển thị cho các component cha mẹ khi sử dụng `ref`. Như mọi khi, code bắt buộc sử dụng ref nên tránh trong hầu hết các trường hợp. `useImperativeHandle` nên được sử dụng với `forwardRef`:
 
 ```js
 function FancyInput(props, ref) {
@@ -401,21 +402,21 @@ function FancyInput(props, ref) {
 FancyInput = forwardRef(FancyInput);
 ```
 
-In this example, a parent component that renders `<FancyInput ref={fancyInputRef} />` would be able to call `fancyInputRef.current.focus()`.
+Trong ví dụ này, một component cha mẹ (parent component) render ra `<FancyInput ref={fancyInputRef} />` sẽ có thể gọi `fancyInputRef.current.focus()`.
 
 ### `useLayoutEffect` {#uselayouteffect}
 
-The signature is identical to `useEffect`, but it fires synchronously after all DOM mutations. Use this to read layout from the DOM and synchronously re-render. Updates scheduled inside `useLayoutEffect` will be flushed synchronously, before the browser has a chance to paint.
+Phần này giống `useEffect`, nhưng nókichs hoạt đồng bộ sau tất cả các đột biến(mutation) DOM. Sử dụng điều này để đọc bố cục từ DOM và đồng bộ việc render lại. Các bản cập nhật được lên lịch trong`useLayoutEffect` sẽ được xoá đồng bộ, trước khi trình duyệt có cơ hội vẽ
 
-Prefer the standard `useEffect` when possible to avoid blocking visual updates.
+Sử dụng `useEffect` khi có thể để tránh việc cập nhật trực quan
 
-> Tip
+> Mẹo
 >
-> If you're migrating code from a class component, note `useLayoutEffect` fires in the same phase as `componentDidMount` and `componentDidUpdate`. However, **we recommend starting with `useEffect` first** and only trying `useLayoutEffect` if that causes a problem.
+>Nếu bạn di chuyển code từ một class component, hãy lưu ý `useLayoutEffect` kích hoạt cùng pha với `componentDidMount` và `componentDidUpdate`. Tuy nhiên, chúng tôi khuyên bạn nên bắt đầu với `useEffect` trước và chỉ sử dụng `useLayoutEffect` nếu điều đó sảy ra sự cố. 
 >
->If you use server rendering, keep in mind that *neither* `useLayoutEffect` nor `useEffect` can run until the JavaScript is downloaded. This is why React warns when a server-rendered component contains `useLayoutEffect`. To fix this, either move that logic to `useEffect` (if it isn't necessary for the first render), or delay showing that component until after the client renders (if the HTML looks broken until `useLayoutEffect` runs).
+>Nếu bạn dùng server rendering, hãy nhớ rằng không sử dụng `useLayoutEffect` hay `useEffect` có thể chạy cho đến khi Javascript được tải xuống. Đây là lý do tại sao React cảnh báo khi một component server-rendered sử dụng `useLayoutEffect`. Để khắc phục điều này, hãy chuyển logic đó sang `useEffect`(nếu nó không cần thiết cho lần render đầu tiên) hoặc trì hoãn hiển thị component đó cho đến khi máy khách render lại( nếu HTML có vẻ bị hỏng cho đến khi `useLayoutEffect chạy)
 >
->To exclude a component that needs layout effects from the server-rendered HTML, render it conditionally with `showChild && <Child />` and defer showing it with `useEffect(() => { setShowChild(true); }, [])`. This way, the UI doesn't appear broken before hydration.
+>Để loại trừ một component cần hiệu ứng bố cục khỏi HTML server-rendered, render nó một cách có điều kiện với `showChild && <Child />` và trì hoãn hiển thị nó với `useEffect(() => { setShowChild(true); }, [])`. Bằng cách này, UI không xuất hiện trước hydration.
 
 ### `useDebugValue` {#usedebugvalue}
 
@@ -423,11 +424,11 @@ Prefer the standard `useEffect` when possible to avoid blocking visual updates.
 useDebugValue(value)
 ```
 
-`useDebugValue` can be used to display a label for custom hooks in React DevTools.
+`useDebugValue` có thể được sử dụng để hiển thị nhãn(label) cho custom hook trong React DevTools.
 
-For example, consider the `useFriendStatus` custom Hook described in ["Building Your Own Hooks"](/docs/hooks-custom.html):
+Ví dụ, hãy xem xét custom Hook `useFriendStatus` được mô tả trong ["xây dựng Hook cho riêng bạn"](/docs/hooks-custom.html):
 
-```js{6-8}
+```js
 function useFriendStatus(friendID) {
   const [isOnline, setIsOnline] = useState(null);
 
@@ -441,17 +442,18 @@ function useFriendStatus(friendID) {
 }
 ```
 
-> Tip
+> Mẹo
 >
-> We don't recommend adding debug values to every custom Hook. It's most valuable for custom Hooks that are part of shared libraries.
+> Chúng tôi khuyên bạn nên thêm các giá trị gỡ lỗi cho mỗi custom Hook. Nó có giá trị nhất đối với custom hook là một phần của các thư viện dùng chung.
 
-#### Defer formatting debug values {#defer-formatting-debug-values}
+#### Triển khai định dạng các giá trị gỡ lỗi {#defer-formatting-debug-values}
 
-In some cases formatting a value for display might be an expensive operation. It's also unnecessary unless a Hook is actually inspected.
+Trong một số trường hợp, định dạng lại giá trị để hiển thị có thể là một thao tác quan trọng. Nó cũng không cần thiết trừ khi một Hook thực sự được kiểm tra.
 
-For this reason `useDebugValue` accepts a formatting function as an optional second parameter. This function is only called if the Hooks are inspected. It receives the debug value as a parameter and should return a formatted display value.
+Vì lý do này, `useDebugValue` chấn nhận formatting function như một dạng tham số thứ hai tuỳ chọn. Function này chỉ được gọi nếu Hook được kiểm tra. Nó nhận giá trị gỡ lỗi dưới dạng tham số và trả về hiển thị đã được định dạng
 
-For example a custom Hook that returned a `Date` value could avoid calling the `toDateString` function unnecessarily by passing the following formatter:
+
+Ví dụ: Custom Hook trả về giá trị `Date` có thể tránh gọi function `toDateString` một cách không cần thiết bằng cách chuyển định dạng sau:
 
 ```js
 useDebugValue(date, date => date.toDateString());
