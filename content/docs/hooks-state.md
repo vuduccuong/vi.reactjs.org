@@ -86,7 +86,7 @@ Hooks **không** hoạt động bên trong các class, nhưng bạn có thể s�
 
 Trong ví dụ này, chúng tôi bắt đầu bằng cách nhập `useState` Hook tử React
 
-```js{1}
+```js
 import React, { useState } from 'react';
 
 function Example() {

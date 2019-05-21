@@ -1,13 +1,13 @@
 ---
 id: hooks-faq
-title: Hooks FAQ
+title: Câu hỏi thường gặp
 permalink: docs/hooks-faq.html
 prev: hooks-reference.html
 ---
 
-*Hooks* are a new addition in React 16.8. They let you use state and other React features without writing a class.
+*Hooks* mới được thêm ở phiên bản React 16.8. Cho phép bạn sử dụng state và các chức năng khác của React mà không cần tạo class.
 
-This page answers some of the frequently asked questions about [Hooks](/docs/hooks-overview.html).
+Trang này trả lời một số câu hỏi thường gặp về [Hooks](/docs/hooks-overview.html).
 
 <!--
   if you ever need to regenerate this, this snippet in the devtools console might help:
@@ -18,19 +18,19 @@ This page answers some of the frequently asked questions about [Hooks](/docs/hoo
   ).join('\n')
 -->
 
-* **[Adoption Strategy](#adoption-strategy)**
-  * [Which versions of React include Hooks?](#which-versions-of-react-include-hooks)
-  * [Do I need to rewrite all my class components?](#do-i-need-to-rewrite-all-my-class-components)
-  * [What can I do with Hooks that I couldn't with classes?](#what-can-i-do-with-hooks-that-i-couldnt-with-classes)
-  * [How much of my React knowledge stays relevant?](#how-much-of-my-react-knowledge-stays-relevant)
-  * [Should I use Hooks, classes, or a mix of both?](#should-i-use-hooks-classes-or-a-mix-of-both)
-  * [Do Hooks cover all use cases for classes?](#do-hooks-cover-all-use-cases-for-classes)
-  * [Do Hooks replace render props and higher-order components?](#do-hooks-replace-render-props-and-higher-order-components)
-  * [What do Hooks mean for popular APIs like Redux connect() and React Router?](#what-do-hooks-mean-for-popular-apis-like-redux-connect-and-react-router)
+* **[Chiến lược đề nghị](#adoption-strategy)**
+  * [Phiên bản nào được thêm Hook?](#which-versions-of-react-include-hooks)
+  * [Tôi có phải viết lại các class components?](#do-i-need-to-rewrite-all-my-class-components)
+  * [Tôi có thể làm được gì với Hook mà không làm được với class?](#what-can-i-do-with-hooks-that-i-couldnt-with-classes)
+  * [Bao nhiêu kiến thức React của tôi vẫn có liên quan](#how-much-of-my-react-knowledge-stays-relevant)
+  * [Tôi nên sử dụng Hook, class hay cả hai?](#should-i-use-hooks-classes-or-a-mix-of-both)
+  * [Hook có bao gồm tất cả các trường hợp sử dụng cho class hay không?](#do-hooks-cover-all-use-cases-for-classes)
+  * [Hook thay thế render props và higher-order component như thế nào?](#do-hooks-replace-render-props-and-higher-order-components)
+  * [Hook có ý nghĩa gì đối với các API phổ biến như Redux connect() và React Router?](#what-do-hooks-mean-for-popular-apis-like-redux-connect-and-react-router)
   * [Do Hooks work with static typing?](#do-hooks-work-with-static-typing)
-  * [How to test components that use Hooks?](#how-to-test-components-that-use-hooks)
-  * [What exactly do the lint rules enforce?](#what-exactly-do-the-lint-rules-enforce)
-* **[From Classes to Hooks](#from-classes-to-hooks)**
+  * [Làm thế nào để test component sử dụng Hook?](#how-to-test-components-that-use-hooks)
+  * [Chính xác, những quy tắc thực thi điều gì?](#what-exactly-do-the-lint-rules-enforce)
+* **[Từ class đến Hook](#from-classes-to-hooks)**
   * [How do lifecycle methods correspond to Hooks?](#how-do-lifecycle-methods-correspond-to-hooks)
   * [How can I do data fetching with Hooks?](#how-can-i-do-data-fetching-with-hooks)
   * [Is there something like instance variables?](#is-there-something-like-instance-variables)
